@@ -24,7 +24,7 @@ func main() {
 	}
 
 	// 初始化数据库
-	db, err := database.Initialize(cfg.Database.Path)
+	db, err := database.Initialize(cfg.Database)
 	if err != nil {
 		log.Fatal("数据库初始化失败:", err)
 	}
