@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emby 管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Emby 管理系统</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" id="logout-btn">退出登录</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- 侧边导航 -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="#dashboard" class="list-group-item list-group-item-action active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> 仪表板
+                    </a>
+                    <a href="#devices" class="list-group-item list-group-item-action" data-tab="devices">
+                        <i class="fas fa-mobile-alt"></i> 设备管理
+                    </a>
+                    <a href="#servers" class="list-group-item list-group-item-action" data-tab="servers">
+                        <i class="fas fa-server"></i> 服务器管理
+                    </a>
+                    <a href="#associations" class="list-group-item list-group-item-action" data-tab="associations">
+                        <i class="fas fa-link"></i> 设备关联
+                    </a>
+                    <a href="#settings" class="list-group-item list-group-item-action" data-tab="settings">
+                        <i class="fas fa-cog"></i> 系统设置
+                    </a>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="col-md-9">
+                <!-- 仪表板 -->
+                <div id="dashboard-content" class="tab-content">
+                    <h2>仪表板</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="total-devices">0</h5>
+                                    <p class="card-text">设备总数</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="active-devices">0</h5>
+                                    <p class="card-text">活跃设备</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="total-servers">0</h5>
+                                    <p class="card-text">服务器总数</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="online-servers">0</h5>
+                                    <p class="card-text">在线服务器</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h4>最近活动</h4>
+                        <div id="recent-activities" class="list-group">
+                            <!-- 动态加载活动 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设备管理 -->
+                <div id="devices-content" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2>设备管理</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeviceModal">
+                            <i class="fas fa-plus"></i> 添加设备
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>设备名称</th>
+                                    <th>标识符</th>
+                                    <th>平台</th>
+                                    <th>IP地址</th>
+                                    <th>最后活跃</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="devices-list">
+                                <!-- 动态加载设备列表 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 服务器管理 -->
+                <div id="servers-content" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2>服务器管理</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addServerModal">
+                            <i class="fas fa-plus"></i> 添加服务器
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>服务器名称</th>
+                                    <th>URL</th>
+                                    <th>版本</th>
+                                    <th>最后检查</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="servers-list">
+                                <!-- 动态加载服务器列表 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 设备关联 -->
+                <div id="associations-content" class="tab-content hidden">
+                    <h2>设备-服务器关联管理</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>设备关联配置</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="select-device" class="form-label">选择设备</label>
+                                        <select class="form-select" id="select-device">
+                                            <!-- 动态加载设备 -->
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="select-server" class="form-label">选择服务器</label>
+                                        <select class="form-select" id="select-server">
+                                            <!-- 动态加载服务器 -->
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="priority" class="form-label">优先级</label>
+                                        <input type="number" class="form-control" id="priority" value="1" min="1">
+                                    </div>
+                                    <button class="btn btn-primary" onclick="addAssociation()">创建关联</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>当前关联关系</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="associations-list">
+                                        <!-- 动态加载关联关系 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统设置 -->
+                <div id="settings-content" class="tab-content hidden">
+                    <h2>系统设置</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="old-password" class="form-label">当前密码</label>
+                                <input type="password" class="form-control" id="old-password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="new-password" class="form-label">新密码</label>
+                                <input type="password" class="form-control" id="new-password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm-password" class="form-label">确认新密码</label>
+                                <input type="password" class="form-control" id="confirm-password">
+                            </div>
+                            <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="addDeviceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加设备</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDeviceForm">
+                        <div class="mb-3">
+                            <label for="device-name" class="form-label">设备名称</label>
+                            <input type="text" class="form-control" id="device-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-platform" class="form-label">平台</label>
+                            <input type="text" class="form-control" id="device-platform">
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-ip" class="form-label">IP地址</label>
+                            <input type="text" class="form-control" id="device-ip">
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-mac" class="form-label">MAC地址</label>
+                            <input type="text" class="form-control" id="device-mac">
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-desc" class="form-label">描述</label>
+                            <textarea class="form-control" id="device-desc" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addServerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加服务器</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addServerForm">
+                        <div class="mb-3">
+                            <label for="server-name" class="form-label">服务器名称</label>
+                            <input type="text" class="form-control" id="server-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="server-url" class="form-label">服务器URL</label>
+                            <input type="text" class="form-control" id="server-url" placeholder="http://emby-server:8096" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="server-username" class="form-label">用户名（可选）</label>
+                            <input type="text" class="form-control" id="server-username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="server-password" class="form-label">密码（可选）</label>
+                            <input type="password" class="form-control" id="server-password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="server-desc" class="form-label">描述</label>
+                            <textarea class="form-control" id="server_desc" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

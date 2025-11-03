@@ -1,0 +1,16 @@
+server:
+  port: "8080"
+
+database:
+  type: "sqlite"           # sqlite, mysql, postgres
+  path: "./data/emby.db"    # SQLite文件路径(仅sqlite)
+  host: "localhost"         # 数据库主机(MySQL/PostgreSQL)
+  port: "3306"              # 数据库端口(MySQL/PostgreSQL)
+  database: "emby_mgmt"     # 数据库名(MySQL/PostgreSQL)
+  username: ""              # 数据库用户名(MySQL/PostgreSQL)
+  password: ""              # 数据库密码(MySQL/PostgreSQL)
+  ssl_mode: "disable"       # SSL模式(仅PostgreSQL)
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expire_time: 24
