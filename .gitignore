@@ -89,3 +89,8 @@ docs/.doctrees/
 coverage.txt
 coverage.html
 coverage.out
+
+# BMad Method files
+.bmad-core/
+.claude/commands/BMad/
+docs/
