@@ -1,0 +1,116 @@
+// 主样式文件
+@import './variables.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $bg-color;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-color;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-color;
+  border-radius: 4px;
+
+  &:hover {
+    background: $text-color-secondary;
+  }
+}
+
+// Element Plus 覆盖样式
+.el-card {
+  border-radius: 8px;
+  border: 1px solid $border-color;
+}
+
+.el-button {
+  border-radius: 6px;
+}
+
+.el-input__wrapper {
+  border-radius: 6px;
+}
+
+// 通用工具类
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-sm {
+  gap: 8px;
+}
+
+.gap-md {
+  gap: 16px;
+}
+
+.gap-lg {
+  gap: 24px;
+}
+
+// 响应式工具类
+@media (max-width: 768px) {
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 993px) and (max-width: 1200px) {
+  .hidden-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1201px) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
