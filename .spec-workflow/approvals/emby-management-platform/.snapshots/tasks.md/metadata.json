@@ -1,0 +1,14 @@
+{
+  "filePath": ".spec-workflow/specs/emby-management-platform/tasks.md",
+  "currentVersion": 1,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2025-11-05T18:12:16.204Z",
+      "trigger": "initial",
+      "approvalId": "approval_1762366336190_6a6mhesw4",
+      "approvalTitle": "批准Emby服务器管理平台任务分解文档"
+    }
+  ]
+}

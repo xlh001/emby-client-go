@@ -1,0 +1,16 @@
+{
+  "id": "snapshot_1762365685746_l2svj9lag",
+  "approvalId": "approval_1762365685731_llg0a7d7m",
+  "approvalTitle": "批准用户认证功能需求文档",
+  "version": 1,
+  "timestamp": "2025-11-05T18:01:25.746Z",
+  "trigger": "initial",
+  "status": "pending",
+  "content": "# Requirements Document - 用户认证功能\n\n## Introduction\n\n本文档定义了Emby服务器管理平台的核心用户认证功能。该功能为平台提供安全的用户身份验证、会话管理和权限控制系统，确保只有授权用户才能访问Emby服务器管理界面和相关功能。\n\n## Alignment with Product Vision\n\n用户认证功能是实现Emby服务器管理平台的基础安全屏障，支持平台的核心目标：\n- 提供安全的多用户访问控制\n- 支持管理员和普通用户的角色分离\n- 为后续的Emby服务器连接管理、媒体库访问等高级功能提供身份验证基础\n\n## Requirements\n\n### Requirement 1 - 用户登录认证\n\n**User Story:** 作为平台用户，我希望能够使用用户名和密码登录系统，以便访问Emby管理功能。\n\n#### Acceptance Criteria\n\n1. WHEN 用户访问登录页面 THEN 系统 SHALL 显示用户名和密码输入框\n2. WHEN 用户输入正确的凭据并提交 THEN 系统 SHALL 返回有效的访问令牌\n3. WHEN 用户提交错误凭据 THEN 系统 SHALL 显示清晰的错误信息\n4. WHEN 用户成功登录 THEN 系统 SHALL 将用户重定向到仪表板页面\n5. IF 用户未登录 THEN 系统 SHALL 阻止访问受保护的页面并重定向到登录页\n\n### Requirement 2 - 用户注册和角色管理\n\n**User Story:** 作为系统管理员，我希望能够创建新用户账户并分配角色，以便管理平台访问权限。\n\n#### Acceptance Criteria\n\n1. WHEN 管理员访问用户管理页面 THEN 系统 SHALL 显示用户创建表单\n2. WHEN 管理员填写用户信息并提交 THEN 系统 SHALL 创建新用户账户\n3. WHEN 创建用户时 THEN 系统 SHALL 支持管理员和普通用户两种角色\n4. IF 普通用户试图访问用户管理功能 THEN 系统 SHALL 拒绝访问并显示权限不足\n\n### Requirement 3 - 会话管理和令牌安全\n\n**User Story:** 作为已登录用户，我希望我的会话能够安全保持，并在令牌过期时能够自动刷新，以便获得流畅的使用体验。\n\n#### Acceptance Criteria\n\n1. WHEN 用户成功登录 THEN 系统 SHALL 生成JWT令牌包含用户信息和权限\n2. WHEN 令牌即将过期（剩余时间<5分钟） THEN 系统 SHALL 自动刷新令牌\n3. WHEN 令牌完全过期 THEN 系统 SHALL 要求用户重新登录\n4. WHEN 用户主动退出 THEN 系统 SHALL 清除本地令牌并会话信息\n5. WHEN 每个API请求 THEN 系统 SHALL 验证令牌的有效性\n\n## Non-Functional Requirements\n\n### Code Architecture and Modularity\n- **Single Responsibility Principle**: 认证逻辑与业务逻辑分离，JWT工具独立模块化\n- **Modular Design**: API路由、中间件、服务层、持久化层各司其职\n- **Dependency Management**: 认证模块不依赖具体业务模块，确保可复用性\n- **Clear Interfaces**: 定义统一的认证响应格式和错误处理接口\n\n### Performance\n- 登录响应时间应在2秒内完成\n- 令牌验证中间件处理时间<50ms\n- 支持并发至少100个认证请求\n- 密码哈希和安全验证操作<100ms\n\n### Security\n- 密码使用bcrypt算法哈希存储，成本因子>=12\n- JWT令牌使用HS256签名算法，密钥长度>=256位\n- 实施密码强度验证：最小8位，包含字母、数字、特殊字符\n- 登录失败5次后锁定账户30分钟\n- 所有认证相关操作记录安全日志\n\n### Reliability\n- 认证服务可用性达到99.9%\n- 令牌生成失败率<0.1%\n- 支持数据库连接断开后的自动重连\n- 实施优雅降级：认证服务不可用时显示友好错误页面\n\n### Usability\n- 登录页面支持记住登录状态功能（可选，7天有效）\n- 提供清晰的错误提示和操作指引\n- 支持键盘操作（Enter键提交登录）\n- 响应式设计支持移动端和桌面端访问\n- 加载状态和进度反馈及时准确\n\n## Technical Specifications\n\n### 依赖的现有模块\n- `internal/config`: 配置管理模块，提供JWT密钥和会话配置\n- `internal/models`: 用户数据模型提供账户结构定义\n- `pkg/database`: 数据库抽象层提供用户CRUD操作\n- 前端路由系统：提供受保护路由的访问控制\n\n### 集成要求\n- 与现有的Emby服务器管理功能集成，确保权限控制有效\n- 与前端状态管理（Pinia）集成，提供全局用户状态\n- 与API中间件系统集成，实现统一的路由保护机制",
+  "fileStats": {
+    "size": 4369,
+    "lines": 96,
+    "lastModified": "2025-11-05T18:01:09.742Z"
+  },
+  "comments": []
+}

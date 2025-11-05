@@ -1,0 +1,14 @@
+{
+  "filePath": ".spec-workflow/specs/user-authentication/design.md",
+  "currentVersion": 1,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2025-11-05T18:06:17.912Z",
+      "trigger": "initial",
+      "approvalId": "approval_1762365977899_7gy4rw219",
+      "approvalTitle": "批准用户认证功能设计文档"
+    }
+  ]
+}

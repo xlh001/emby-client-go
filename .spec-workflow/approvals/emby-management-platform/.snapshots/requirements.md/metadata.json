@@ -1,0 +1,14 @@
+{
+  "filePath": ".spec-workflow/specs/emby-management-platform/requirements.md",
+  "currentVersion": 1,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2025-11-05T18:07:56.348Z",
+      "trigger": "initial",
+      "approvalId": "approval_1762366076332_xjckfwho5",
+      "approvalTitle": "批准Emby服务器管理平台全局需求文档"
+    }
+  ]
+}
