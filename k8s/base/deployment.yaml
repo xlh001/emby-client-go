@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emby-manager
+  namespace: emby-manager
+  labels:
+    app: emby-manager
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: emby-manager
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: emby-manager
+        component: backend
+    spec:
+      containers:
+      - name: emby-manager
+        image: emby-manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: DATABASE_TYPE
+          value: "postgres"
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: emby-manager-secrets
+              key: jwt-secret
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: emby-manager-secrets
+              key: db-password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /root/configs
+        - name: data-volume
+          mountPath: /root/data
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: false
+      volumes:
+      - name: config-volume
+        configMap:
+          name: emby-manager-config
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: emby-manager-data
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000

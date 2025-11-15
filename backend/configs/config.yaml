@@ -1,0 +1,39 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  mode: "debug"
+  read_timeout: 30
+  write_timeout: 30
+
+database:
+  type: "sqlite"
+  host: "localhost"
+  port: 5432
+  username: ""
+  password: ""
+  database: "./emby_manager.db"
+  ssl_mode: "disable"
+  max_idle_conns: 10
+  max_open_conns: 100
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+
+jwt:
+  secret: "emby_manager_secret_key_please_change_in_production"
+  expire_time: 86400 # 24小时
+  issuer: "emby-manager"
+
+emby:
+  default_timeout: 30
+  max_retry_times: 3
+  enable_cache: true
+  cache_ttl: 300 # 5分钟
+
+log:
+  level: "info"
+  format: "json"
+  output: "stdout"

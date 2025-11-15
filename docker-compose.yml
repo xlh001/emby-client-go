@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # Emby管理平台
+  emby-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: emby-manager
+    ports:
+      - "8080:8080"
+    volumes:
+      # 持久化数据
+      - ./data:/root/data
+      # 配置文件挂载
+      - ./configs:/root/configs
+    environment:
+      # 服务器配置
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8080
+      - SERVER_MODE=release
+      # 数据库配置
+      - DATABASE_TYPE=sqlite
+      - DATABASE_DATABASE=./data/emby_manager.db
+      # JWT配置
+      - JWT_SECRET=请修改为安全的密钥
+      - JWT_EXPIRE_TIME=86400
+      - JWT_ISSUER=emby-manager
+      # 日志配置
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - emby-network
+
+  # PostgreSQL数据库（可选）
+  postgres:
+    image: postgres:16-alpine
+    container_name: emby-postgres
+    environment:
+      POSTGRES_DB: emby_manager
+      POSTGRES_USER: emby
+      POSTGRES_PASSWORD: 请设置安全的密码
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U emby"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - emby-network
+    profiles:
+      - postgres
+
+  # Redis缓存（可选）
+  redis:
+    image: redis:7-alpine
+    container_name: emby-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - emby-network
+    profiles:
+      - redis
+
+  # Nginx反向代理（生产环境推荐）
+  nginx:
+    image: nginx:alpine
+    container_name: emby-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - emby-manager
+    restart: unless-stopped
+    networks:
+      - emby-network
+    profiles:
+      - nginx
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  emby-network:
+    driver: bridge
