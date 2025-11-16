@@ -75,7 +75,7 @@ func (h *WebSocketHandler) HandleWebSocket(c *gin.Context) {
 		ServerID: serverID,
 		Conn:     conn,
 		Send:     make(chan websocket.Message, 256),
-		Manager:  h.hub,
+		Hub:      h.hub,
 	}
 
 	// 注册客户端

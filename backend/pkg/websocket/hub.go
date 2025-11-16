@@ -3,7 +3,6 @@ package websocket
 import (
 	"encoding/json"
 	"log"
-	"net/http"
 	"sync"
 	"time"
 
@@ -25,7 +24,7 @@ type Client struct {
 	ServerID string              // 服务器ID（可选，用于服务器特定连接）
 	Conn     *websocket.Conn     // WebSocket连接
 	Send     chan Message         // 发送消息通道
-	Manager  *Manager            // 管理器引用
+	Hub      *Hub                // Hub引用
 	LastPing time.Time           // 最后心跳时间
 	mutex    sync.RWMutex        // 读写锁
 }
@@ -373,7 +372,7 @@ const (
 // ReadPump 读取客户端消息
 func (c *Client) ReadPump() {
 	defer func() {
-		c.Manager.unregisterClient(c)
+		c.Hub.Unregister <- c
 		c.Conn.Close()
 	}()
 
@@ -409,7 +408,7 @@ func (c *Client) ReadPump() {
 		switch msg.Type {
 		case "ping":
 			// 响应ping消息
-			c.Manager.sendToClient(c, Message{
+			c.Hub.sendToClient(c, Message{
 				Type:      "pong",
 				Data:      map[string]interface{}{"timestamp": time.Now()},
 				Timestamp: time.Now(),

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/emby-client-go/backend/internal/services"
-	"github.com/emby-client-go/backend/internal/models"
 	"github.com/gin-gonic/gin"
 )
 

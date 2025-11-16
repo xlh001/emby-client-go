@@ -41,3 +41,13 @@ Thumbs.db
 *.log
 *.tmp
 *.bak
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Executables
+emby-manager
+emby-manager-test
+emby-manager~

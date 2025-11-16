@@ -43,11 +43,10 @@
 - WebSocket
 
 ### 前端
-- Vue 3 + TypeScript
-- Vite
-- Element Plus
-- Pinia
-- Vue Router
+- Angular 20 + TypeScript
+- Angular Material
+- RxJS
+- Angular Router
 
 ### 部署
 - Docker + Docker Compose
@@ -65,7 +64,7 @@ docker-compose -f docker-compose.dev.yml up
 ```
 
 2. **访问应用**
-- 前端: http://localhost:5173
+- 前端: http://localhost:4200
 - 后端: http://localhost:8080
 - API文档: http://localhost:8080/swagger/index.html
 
@@ -132,13 +131,12 @@ http://localhost:8080/swagger/index.html
 │       ├── emby/          # Emby 客户端
 │       └── websocket/     # WebSocket 管理
 │
-├── frontend/               # Vue 前端
+├── frontend/               # Angular 前端
 │   └── src/
-│       ├── views/         # 页面组件
-│       ├── components/    # 可复用组件
-│       ├── services/      # API 服务
-│       ├── stores/        # 状态管理
-│       └── router/        # 路由配置
+│       └── app/           # 应用模块
+│           ├── components/    # 可复用组件
+│           ├── services/      # API 服务
+│           └── models/        # 数据模型
 │
 ├── docker-compose.yml      # 生产环境编排
 ├── docker-compose.dev.yml  # 开发环境编排
@@ -161,7 +159,7 @@ go run cmd/server/main.go
 ```bash
 cd frontend
 npm install
-npm run dev
+npm start
 ```
 
 ## 许可证

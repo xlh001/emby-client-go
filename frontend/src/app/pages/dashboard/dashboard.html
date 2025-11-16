@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Emby 管理平台</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    退出
+  </button>
+</mat-toolbar>
+
+<mat-drawer-container class="container">
+  <mat-drawer #drawer mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        <span>总览</span>
+      </a>
+      <a mat-list-item routerLink="/servers" routerLinkActive="active">
+        <mat-icon>dns</mat-icon>
+        <span>服务器</span>
+      </a>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="content">
+      <h2>系统总览</h2>
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">dns</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ stats.servers }}</div>
+            <div class="stat-label">服务器</div>
+          </div>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">folder</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ stats.libraries }}</div>
+            <div class="stat-label">媒体库</div>
+          </div>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">devices</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ stats.devices }}</div>
+            <div class="stat-label">在线设备</div>
+          </div>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">play_circle</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ stats.sessions }}</div>
+            <div class="stat-label">活动会话</div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
