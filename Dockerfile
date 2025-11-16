@@ -16,7 +16,7 @@ COPY/backend/ ./
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o emby-manager cmd/server/main.go
 
 # 前端构建阶段
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app
 
@@ -24,10 +24,10 @@ WORKDIR /app
 COPY frontend/package*.json ./
 
 # 安装依赖
-RUN npm ci --only=production
+RUN npm ci
 
 # 复制源代码
-COPY/frontend/ ./
+COPY frontend/ ./
 
 # 构建前端
 RUN npm run build
@@ -43,7 +43,7 @@ WORKDIR /root/
 # 从构建阶段复制文件
 COPY --from=backend-builder /app/emby-manager .
 COPY --from=backend-builder /app/configs ./configs
-COPY --from=frontend-builder /app/dist ./frontend/dist
+COPY --from=frontend-builder /app/dist/frontend/browser ./frontend/dist
 
 # 创建数据目录
 RUN mkdir -p ./data

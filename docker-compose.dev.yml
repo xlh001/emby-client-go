@@ -25,17 +25,15 @@ services:
 
   # 前端开发服务
   frontend:
-    image: node:18-alpine
+    image: node:20-alpine
     container_name: emby-manager-frontend-dev
     working_dir: /app
     ports:
-      - "5173:5173"
+      - "4200:4200"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm run dev
-    environment:
-      - VITE_API_BASE_URL=http://localhost:8080
+    command: npm start
     networks:
       - dev-network
 
