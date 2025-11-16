@@ -11,7 +11,7 @@ database:
   port: 5432
   username: ""
   password: ""
-  database: "./emby_manager.db"
+  database: "./data/emby_manager.db"
   ssl_mode: "disable"
   max_idle_conns: 10
   max_open_conns: 100

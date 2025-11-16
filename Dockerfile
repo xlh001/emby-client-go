@@ -26,6 +26,5 @@ COPY --from=builder /app/backend/configs ./configs
 COPY --from=builder /app/frontend/dist/frontend/browser ./frontend/dist
 RUN mkdir -p ./data
 EXPOSE 8080
-ENV SERVER_HOST=0.0.0.0 SERVER_PORT=8080 DATABASE_TYPE=sqlite DATABASE_DATABASE=./data/emby_manager.db
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 CMD ["./emby-manager"]

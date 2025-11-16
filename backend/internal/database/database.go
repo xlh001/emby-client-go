@@ -7,6 +7,7 @@ import (
 
 	"github.com/emby-client-go/backend/internal/config"
 	"github.com/emby-client-go/backend/internal/models"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -83,7 +84,57 @@ func Init() error {
 		return fmt.Errorf("数据表迁移失败: %v", err)
 	}
 
+	// 初始化默认管理员
+	if err := initDefaultAdmin(); err != nil {
+		return fmt.Errorf("初始化默认管理员失败: %v", err)
+	}
+
 	return nil
+}
+
+func initDefaultAdmin() error {
+	var count int64
+	if err := DB.Model(&models.User{}).Count(&count).Error; err != nil {
+		return err
+	}
+
+	if count == 0 {
+		password := generateRandomPassword(16)
+		hashedPassword, err := hashPassword(password)
+		if err != nil {
+			return err
+		}
+
+		admin := &models.User{
+			Username: "admin",
+			Email:    "admin@emby-client-go.local",
+			Password: hashedPassword,
+			Nickname: "管理员",
+			Role:     "admin",
+			Status:   "active",
+		}
+		if err := DB.Create(admin).Error; err != nil {
+			return err
+		}
+		log.Printf("默认管理员已创建 - 用户名: admin, 密码: %s (请妥善保存)", password)
+	}
+
+	return nil
+}
+
+func generateRandomPassword(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[time.Now().UnixNano()%int64(len(charset))]
+		time.Sleep(time.Nanosecond)
+	}
+	return string(b)
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
 }
 
 func autoMigrate() error {

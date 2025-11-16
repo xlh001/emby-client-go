@@ -18,6 +18,13 @@ func SetupRoutes(r *gin.Engine, hub *websocket.Hub, wsManager *websocket.Manager
 	// Swagger文档
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// 静态文件服务
+	r.Static("/assets", "./frontend/dist")
+	r.StaticFile("/", "./frontend/dist/index.html")
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./frontend/dist/index.html")
+	})
+
 	// 创建处理器
 	userHandler := NewUserHandler()
 	serverHandler := NewServerHandler()

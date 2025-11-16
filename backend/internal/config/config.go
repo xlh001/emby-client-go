@@ -66,15 +66,20 @@ func Init() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./configs")
+	viper.AddConfigPath("/etc/emby-client-go")
 	viper.AddConfigPath(".")
 
 	// 设置默认值
 	setDefaults()
 
+	// 自动读取环境变量
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("EMBY")
+
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Println("配置文件未找到，使用默认配置")
+			log.Println("配置文件未找到，使用默认配置和环境变量")
 		} else {
 			log.Fatalf("读取配置文件失败: %v", err)
 		}
@@ -102,7 +107,7 @@ func setDefaults() {
 	viper.SetDefault("database.port", 5432)
 	viper.SetDefault("database.username", "")
 	viper.SetDefault("database.password", "")
-	viper.SetDefault("database.database", "./emby_manager.db")
+	viper.SetDefault("database.database", "./data/emby_manager.db")
 	viper.SetDefault("database.ssl_mode", "disable")
 	viper.SetDefault("database.max_idle_conns", 10)
 	viper.SetDefault("database.max_open_conns", 100)
