@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: emby-manager-backend-dev
+    container_name: emby-client-go-backend-dev
     ports:
       - "8080:8080"
     volumes:
@@ -21,12 +21,12 @@ services:
       - JWT_SECRET=dev-secret-key
       - LOG_LEVEL=debug
     networks:
-      - dev-network
+      - emby-client-go-dev-network
 
   # 前端开发服务
   frontend:
     image: node:20-alpine
-    container_name: emby-manager-frontend-dev
+    container_name: emby-client-go-frontend-dev
     working_dir: /app
     ports:
       - "4200:4200"
@@ -35,8 +35,8 @@ services:
       - /app/node_modules
     command: npm start
     networks:
-      - dev-network
+      - emby-client-go-dev-network
 
 networks:
-  dev-network:
+  emby-client-go-dev-network:
     driver: bridge

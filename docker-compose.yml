@@ -2,11 +2,9 @@ version: '3.8'
 
 services:
   # Emby管理平台
-  emby-manager:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: emby-manager
+  emby-client-go:
+    image: xlh001/emby-client-go:latest
+    container_name: emby-client-go
     ports:
       - "8080:8080"
     volumes:
@@ -36,12 +34,12 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - emby-network
+      - emby-client-go-network
 
   # PostgreSQL数据库（可选）
   postgres:
     image: postgres:16-alpine
-    container_name: emby-postgres
+    container_name: emby-client-go-postgres
     environment:
       POSTGRES_DB: emby_manager
       POSTGRES_USER: emby
@@ -57,14 +55,14 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - emby-network
+      - emby-client-go-network
     profiles:
       - postgres
 
   # Redis缓存（可选）
   redis:
     image: redis:7-alpine
-    container_name: emby-redis
+    container_name: emby-client-go-redis
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
@@ -77,14 +75,14 @@ services:
       timeout: 3s
       retries: 3
     networks:
-      - emby-network
+      - emby-client-go-network
     profiles:
       - redis
 
   # Nginx反向代理（生产环境推荐）
   nginx:
     image: nginx:alpine
-    container_name: emby-nginx
+    container_name: emby-client-go-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -93,10 +91,10 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - ./logs/nginx:/var/log/nginx
     depends_on:
-      - emby-manager
+      - emby-client-go
     restart: unless-stopped
     networks:
-      - emby-network
+      - emby-client-go-network
     profiles:
       - nginx
 
@@ -107,5 +105,5 @@ volumes:
     driver: local
 
 networks:
-  emby-network:
+  emby-client-go-network:
     driver: bridge
