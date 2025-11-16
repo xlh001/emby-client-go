@@ -14,7 +14,8 @@ RUN apk add --no-cache go gcc musl-dev sqlite-dev
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 COPY backend/ ./
-RUN CGO_ENABLED=1 go build -ldflags="-s -w" -o emby-manager cmd/server/main.go
+ARG TARGETOS TARGETARCH
+RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="-s -w" -o emby-manager cmd/server/main.go
 
 # 运行阶段
 FROM alpine:latest
