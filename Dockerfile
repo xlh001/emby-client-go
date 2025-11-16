@@ -10,7 +10,7 @@ COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 # 复制源代码
-COPY/backend/ ./
+COPY backend/ ./
 
 # 构建应用
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o emby-manager cmd/server/main.go
